@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ChatOn</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+            integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        const socket = io();
+
+        socket.on('connect', function () {
+            socket.send('I\'m connected');
+        });
+        
+        let x = true;
+        
+        socket.on('message', function (message) {
+            console.log(message)
+            const ul = document.getElementById("messages");
+            let newListItem = document.createElement('li');
+            newListItem.textContent = message;
+            ul.appendChild(newListItem);
+            newListItem.setAttribute("class", "list-group-item");
+            if(x){
+            	newListItem.setAttribute("style", "background-color: blueviolet; color: white");
+            }
+            else{
+            	newListItem.setAttribute("style", "background-color: rgb(216, 206, 219); color: black");
+            }
+            x = !x;
+        });
+
+        document.addEventListener("DOMContentLoaded", function ready() {
+            document.getElementById("sendButton").addEventListener("click", function () {
+                socket.send(document.getElementById('myMessage').value);
+                document.getElementById('myMessage').value = '';
+            });
+        });
+    </script>
+</head>
+<body style="background-color: rgb(193, 171, 224)">
+<div class="container">
+    <ul class="list-group" id="messages"></ul>
+    <!--    <div class="input-group mb-3">-->
+    <!--        <label>-->
+    <!--            <input type="text" class="form-control" id="myMessage" placeholder="Type Your Message" aria-describedby="basic-addon2">-->
+    <!--        </label>-->
+    <!--        <div class="input-group-append">-->
+    <!--            <button class="btn btn-outline-primary" id="sendButton" type="button">Send</button>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="myMessage" placeholder="Type a message" aria-label="Type a message"
+               aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button style="color: white" class="btn btn-outline-secondary" id="sendButton" type="button">Send</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
